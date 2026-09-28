@@ -1,5 +1,9 @@
 # Contributing
 
+## TODO
+
+- Add nix-darwin packaging for Swiftpoint's universal macOS `.pkg`, supporting both Apple Silicon and Intel Macs.
+
 ## Updating releases
 
 Run the updater from the repository root:
