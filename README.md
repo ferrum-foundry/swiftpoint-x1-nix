@@ -1,11 +1,10 @@
 # Swiftpoint X1 Control Panel for NixOS
 
-Nix packaging for the Linux version of the Swiftpoint X1 Control Panel, with
-stable and beta release channels and the device-access rules required by the
-application.
+Nix packaging for the Linux version of the Swiftpoint X1 Control Panel, with stable and beta release channels and the device-access rules required by the application.
 
-The upstream application is proprietary software. You must allow unfree
-packages in your Nixpkgs configuration.
+See the [Swiftpoint website](https://www.swiftpoint.com/), the [X1 Control Panel download page](https://support.swiftpoint.com/portal/en/kb/articles/swiftpoint-x1-control-panel-download), and Swiftpoint's [experimental Linux release page](https://support.swiftpoint.com/portal/en/kb/articles/x1-control-panel-linux) for upstream information and manual downloads.
+
+The upstream application is proprietary software. You must allow unfree packages in your Nixpkgs configuration.
 
 ## NixOS module
 
@@ -49,9 +48,7 @@ Enable the application in your NixOS configuration:
 }
 ```
 
-The module installs the application and its udev rules. Rebuild NixOS, then
-reconnect the mouse and receiver if the application cannot initially access
-them.
+The module installs the application and its udev rules. Rebuild NixOS, then reconnect the mouse and receiver if the application cannot initially access them.
 
 ## Direct package installation
 
@@ -62,9 +59,7 @@ nix run github:ferrum-foundry/swiftpoint-x1-nix
 nix run github:ferrum-foundry/swiftpoint-x1-nix#beta
 ```
 
-The available package outputs are `default`, `stable`, and `beta`. When adding
-one directly to `environment.systemPackages`, also add the same package to
-`services.udev.packages`.
+The available package outputs are `default`, `stable`, and `beta`. When adding one directly to `environment.systemPackages`, also add the same package to `services.udev.packages`.
 
 ## Overlay
 

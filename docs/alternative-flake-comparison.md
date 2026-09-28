@@ -16,19 +16,12 @@ This flake and [Blu3SoulsIT/NiX1-Control-Panel](https://github.com/Blu3SoulsIT/N
 | Metadata | Correctly marked as unfree native binary code | Was marked free/redistributable when reviewed |
 | Validation | Automated package, module, wrapper and evaluation checks | No equivalent checks found |
 
-The alternative flake is a compact package for one release. This flake is
-designed as an ongoing distribution interface with multiple channels, automated
-updates, NixOS integration and tests.
+The alternative flake is a compact package for one release. This flake is designed as an ongoing distribution interface with multiple channels, automated updates, NixOS integration and tests.
 
 ## Useful differences
 
 One idea from the alternative remains worth considering here:
 
-1. Preserve the complete upstream payload, or test that the allow-list has not
-   omitted newly added runtime files.
+1. Preserve the complete upstream payload, or test that the allow-list has not omitted newly added runtime files.
 
-The alternative flake revealed that Swiftpoint's `3.0.7.20` archive included
-`profiles/Desktop/logo.png`. Neither current release contains that file—or any
-other image asset—so this flake retains a copy from the older official archive
-at `assets/logo.png` and installs it as the desktop icon. Ideally each release
-would supply its own icon so visual changes could follow the packaged version.
+The alternative flake revealed that Swiftpoint's `3.0.7.20` archive included `profiles/Desktop/logo.png`. Neither current release contains that file—or any other image asset—so this flake retains a copy from the older official archive at `assets/logo.png` and installs it as the desktop icon. Ideally each release would supply its own icon so visual changes could follow the packaged version.
