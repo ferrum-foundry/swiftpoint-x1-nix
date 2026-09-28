@@ -32,6 +32,8 @@ in
   };
 
   config = {
+    nixpkgs.overlays = [ self.overlays.default ];
+
     assertions = [
       {
         assertion = builtins.length configuredChannels <= 1;

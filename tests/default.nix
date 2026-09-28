@@ -66,6 +66,9 @@ in
   package-beta = packages.beta;
 
   module =
+    assert builtins.hasAttr "swiftpoint-x1-control-panel" stableConfiguration.pkgs;
+    assert builtins.hasAttr "swiftpoint-x1-control-panel-beta" stableConfiguration.pkgs;
+    assert builtins.hasAttr "swiftpoint-x1-control-panel-versions" stableConfiguration.pkgs;
     assert packageIsPresent stableConfiguration.config.environment.systemPackages packages.stable;
     assert packageIsPresent stableConfiguration.config.services.udev.packages packages.stable;
     assert packageIsPresent betaConfiguration.config.environment.systemPackages packages.beta;

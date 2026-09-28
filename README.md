@@ -65,12 +65,27 @@ The available package outputs are `default`, `stable`, and `beta`. When adding o
 
 ## Overlay
 
-The default overlay provides:
+You can use the packages directly instead of enabling the module-managed application.
+
+Stable:
 
 ```nix
-pkgs.swiftpoint-x1-control-panel
-pkgs.swiftpoint-x1-control-panel-beta
-pkgs.swiftpointX1Versions
+environment.systemPackages = [ pkgs.swiftpoint-x1-control-panel ];
+services.udev.packages = [ pkgs.swiftpoint-x1-control-panel ];
+```
+
+Beta:
+
+```nix
+environment.systemPackages = [ pkgs.swiftpoint-x1-control-panel-beta ];
+services.udev.packages = [ pkgs.swiftpoint-x1-control-panel-beta ];
+```
+
+Pinned:
+
+```nix
+environment.systemPackages = [ pkgs.swiftpoint-x1-control-panel-versions."3.1.3.1" ];
+services.udev.packages = [ pkgs.swiftpoint-x1-control-panel-versions."3.1.3.1" ];
 ```
 
 See [docs](docs/) for packaging behavior and known caveats.

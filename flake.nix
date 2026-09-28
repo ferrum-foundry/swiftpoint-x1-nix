@@ -37,7 +37,7 @@
           {
             swiftpoint-x1-control-panel = swiftpointPackages.stable;
             swiftpoint-x1-control-panel-beta = swiftpointPackages.beta;
-            swiftpointX1Versions = swiftpointPackages.versions;
+            swiftpoint-x1-control-panel-versions = swiftpointPackages.versions;
           }
         );
 
