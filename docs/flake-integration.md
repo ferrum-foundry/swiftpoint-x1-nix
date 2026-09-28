@@ -23,10 +23,10 @@ package against their Nixpkgs revision rather than the revision tested by this
 repository. Compatibility should therefore be checked periodically against
 updated Nixpkgs revisions.
 
-## Linux-only package
+## Current Linux-only package outputs
 
-Swiftpoint provides the packaged application as an x86-64 Linux binary. This
-flake therefore exposes packages only for `x86_64-linux`.
+The package outputs currently implemented by this flake use Swiftpoint's
+x86-64 Linux binary, so they are exposed only for `x86_64-linux`.
 
 Adding the flake as an input on another platform is harmless because inputs do
 nothing until an output is used. The overlay is also designed to be safe in a
@@ -38,9 +38,14 @@ deciding which attributes the overlay contributes introduces an overlay
 fixpoint dependency and can cause infinite recursion.
 
 The NixOS module must not be imported into nix-darwin. It uses NixOS-specific
-options, including `services.udev.packages`. Native macOS support would require
-a separate upstream application and packaging/module implementation rather
-than merely enabling the existing Linux derivation.
+options, including `services.udev.packages`.
+
+Swiftpoint also publishes a fully supported macOS application as a universal
+`.pkg` for Apple Silicon and Intel Macs. Native nix-darwin support is therefore
+feasible and tracked separately. It needs a macOS-specific derivation and
+Darwin module because the application bundle, installer format, device access,
+and integration points differ from the experimental Linux archive. It cannot
+be implemented by enabling the existing Linux derivation on Darwin.
 
 ## Flake outputs
 
