@@ -68,7 +68,7 @@ $XDG_STATE_HOME  = ~/.local/state
 $XDG_CACHE_HOME  = ~/.cache
 ```
 
-The directory name does not need to change for compliance. Retaining `Swiftpoint X1 Control Panel` would reduce migration work and preserve compatibility with existing installations.
+The directory name does not need to change for XDG compliance, but `Swiftpoint X1 Control Panel` is atypical for a Linux application directory because it contains uppercase letters and spaces. A lowercase, space-free application ID such as `swiftpoint-x1` would be more conventional and easier to use from shells and packaging tools. Retaining the existing name would reduce migration work and preserve compatibility, so a rename should use the same backwards-compatible migration strategy as any directory-layout change.
 
 ## Benefits
 
