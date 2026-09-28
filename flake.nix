@@ -27,18 +27,20 @@
       );
 
       overlays.default = final: _prev:
-        let
-          swiftpointPackages = final.callPackage ./packages { };
-        in
-        {
-          swiftpoint-x1-control-panel = swiftpointPackages.stable;
-          swiftpoint-x1-control-panel-beta = swiftpointPackages.beta;
-          swiftpointX1Versions = swiftpointPackages.versions;
-        };
+        nixpkgs.lib.optionalAttrs final.stdenv.hostPlatform.isLinux (
+          let
+            swiftpointPackages = final.callPackage ./packages { };
+          in
+          {
+            swiftpoint-x1-control-panel = swiftpointPackages.stable;
+            swiftpoint-x1-control-panel-beta = swiftpointPackages.beta;
+            swiftpointX1Versions = swiftpointPackages.versions;
+          }
+        );
 
       nixosModules.default = import ./modules { inherit self; };
       nixosModules.swiftpoint-x1-control-panel = self.nixosModules.default;
 
-      formatter = forAllSystems (system: (pkgsFor system).nixfmt-rfc-style);
+      formatter = forAllSystems (system: (pkgsFor system).nixfmt);
     };
 }
