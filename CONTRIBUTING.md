@@ -39,3 +39,16 @@ nix build .#beta
 Each application archive retains its own upstream udev rules. This allows a
 future release to change device support without requiring a separate packaging
 update for shared rules.
+
+## Automated updates
+
+The `Update Swiftpoint releases` GitHub Actions workflow runs every day and can
+also be started manually from the Actions tab. When `./update.sh` changes
+release metadata, the workflow validates the flake, builds both current
+channels, and opens or updates a pull request from
+`automated/update-swiftpoint-releases`.
+
+The repository must allow GitHub Actions to create pull requests. Keep update
+pull requests subject to normal review: the workflow downloads and hashes new
+proprietary upstream binaries, but does not independently establish their
+trustworthiness or firmware safety.
