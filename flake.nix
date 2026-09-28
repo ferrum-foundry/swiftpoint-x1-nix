@@ -8,10 +8,12 @@
     let
       supportedSystems = [ "x86_64-linux" ];
       forAllSystems = nixpkgs.lib.genAttrs supportedSystems;
-      pkgsFor = system: import nixpkgs {
-        inherit system;
-        config.allowUnfree = true;
-      };
+      pkgsFor =
+        system:
+        import nixpkgs {
+          inherit system;
+          config.allowUnfree = true;
+        };
     in
     {
       packages = forAllSystems (
@@ -26,7 +28,8 @@
         // swiftpointPackages.versions
       );
 
-      overlays.default = final: prev:
+      overlays.default =
+        final: prev:
         nixpkgs.lib.optionalAttrs prev.stdenv.hostPlatform.isLinux (
           let
             swiftpointPackages = final.callPackage ./packages { };
@@ -40,6 +43,14 @@
 
       nixosModules.default = import ./modules { inherit self; };
       nixosModules.swiftpoint-x1-control-panel = self.nixosModules.default;
+
+      checks = forAllSystems (
+        system:
+        import ./tests {
+          inherit self nixpkgs system;
+          pkgs = pkgsFor system;
+        }
+      );
 
       formatter = forAllSystems (system: (pkgsFor system).nixfmt);
     };

@@ -8,3 +8,8 @@
 - [Firmware considerations](firmware.md)
 - [Troubleshooting](troubleshooting.md)
 - [Suggested XDG directory layout](xdg-directory-recommendation.md)
+
+## Development
+
+- [Testing and validation](development/testing.md)
+- [Maintaining the binary package](development/binary-packaging.md)
