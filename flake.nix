@@ -26,8 +26,8 @@
         // swiftpointPackages.versions
       );
 
-      overlays.default = final: _prev:
-        nixpkgs.lib.optionalAttrs final.stdenv.hostPlatform.isLinux (
+      overlays.default = final: prev:
+        nixpkgs.lib.optionalAttrs prev.stdenv.hostPlatform.isLinux (
           let
             swiftpointPackages = final.callPackage ./packages { };
           in

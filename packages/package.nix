@@ -167,6 +167,7 @@ stdenv.mkDerivation rec {
 
   passthru = {
     inherit (release) channel firmware;
+    swiftpointX1ControlPanel = true;
     updateScript = ../update.sh;
   };
 

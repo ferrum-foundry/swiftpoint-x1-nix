@@ -1,0 +1,2 @@
+- GHA automate updates using ./update.sh
+- support darwin-nix

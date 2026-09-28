@@ -12,7 +12,10 @@ let
   packages = self.packages.${system};
   selectedPackage = packages.${cfg.channel};
   configuredPackages = config.environment.systemPackages ++ config.services.udev.packages;
-  contains = package: lib.any (candidate: toString candidate == toString package) configuredPackages;
+  swiftpointPackages = lib.filter (
+    package: package.swiftpointX1ControlPanel or false
+  ) configuredPackages;
+  configuredChannels = lib.unique (map (package: package.channel) swiftpointPackages);
 in
 {
   options.programs.swiftpoint-x1-control-panel = {
@@ -31,10 +34,10 @@ in
   config = {
     assertions = [
       {
-        assertion = !(contains packages.stable && contains packages.beta);
+        assertion = builtins.length configuredChannels <= 1;
         message = ''
-          The stable and beta Swiftpoint X1 Control Panel packages cannot be
-          installed simultaneously. Remove one of them or select a single
+          Different Swiftpoint X1 Control Panel releases cannot be installed
+          simultaneously. Remove the conflicting packages or select a single
           programs.swiftpoint-x1-control-panel.channel value.
         '';
       }
