@@ -111,7 +111,7 @@ stdenv.mkDerivation rec {
   desktopItem = makeDesktopItem {
     name = "swiftpoint-x1-control-panel";
     exec = "swiftpoint-x1-control-panel";
-    icon = "input-mouse";
+    icon = "swiftpoint-x1-control-panel";
     comment = "Configure and manage Swiftpoint mice settings and profiles";
     desktopName = "Swiftpoint X1 Control Panel";
     genericName = "Mouse Configuration Utility";
@@ -149,6 +149,9 @@ stdenv.mkDerivation rec {
     mkdir -p "$out/share/applications"
     cp "${desktopItem}/share/applications/"* "$out/share/applications/"
 
+    install -Dm644 ${../assets/logo.png} \
+      "$out/share/pixmaps/swiftpoint-x1-control-panel.png"
+
     runHook postInstall
   '';
 
@@ -162,7 +165,7 @@ stdenv.mkDerivation rec {
   '';
 
   qtWrapperArgs = [
-    "--prefix LD_LIBRARY_PATH : $out/share/swiftpoint/lib"
+    "--prefix LD_LIBRARY_PATH : ${builtins.placeholder "out"}/share/swiftpoint/lib"
   ];
 
   passthru = {

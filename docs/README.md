@@ -8,6 +8,7 @@
 - [Firmware considerations](firmware.md)
 - [Troubleshooting](troubleshooting.md)
 - [Suggested XDG directory layout](xdg-directory-recommendation.md)
+- [Comparison with NiX1-Control-Panel](alternative-flake-comparison.md)
 
 ## Development
 

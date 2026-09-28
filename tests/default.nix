@@ -100,6 +100,28 @@ in
     touch "$out"
   '';
 
+  wrapper-runtime-path = pkgs.runCommand "swiftpoint-wrapper-runtime-path-test" { } ''
+    wrapper=${packages.stable}/bin/.swiftpoint-x1-control-panel-wrapped
+
+    grep -F '${packages.stable}/share/swiftpoint/lib' "$wrapper"
+    if grep -F '$out/share/swiftpoint/lib' "$wrapper"; then
+      echo 'Qt wrapper contains an unresolved $out reference' >&2
+      exit 1
+    fi
+
+    touch "$out"
+  '';
+
+  desktop-integration = pkgs.runCommand "swiftpoint-desktop-integration-test" { } ''
+    desktop_file=${packages.stable}/share/applications/swiftpoint-x1-control-panel.desktop
+    installed_icon=${packages.stable}/share/pixmaps/swiftpoint-x1-control-panel.png
+
+    grep -qx 'Icon=swiftpoint-x1-control-panel' "$desktop_file"
+    cmp ${../assets/logo.png} "$installed_icon"
+
+    touch "$out"
+  '';
+
   darwin-overlay =
     assert !(builtins.hasAttr "swiftpoint-x1-control-panel" darwinPackages);
     assert !(builtins.hasAttr "swiftpoint-x1-control-panel-beta" darwinPackages);
