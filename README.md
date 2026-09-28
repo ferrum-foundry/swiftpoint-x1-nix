@@ -59,6 +59,8 @@ nix run github:ferrum-foundry/swiftpoint-x1-nix
 nix run github:ferrum-foundry/swiftpoint-x1-nix#beta
 ```
 
+`nix run` does not install udev rules. Device access requires `60-Swiftpoint.rules` to be configured system-wide; the NixOS module does this automatically.
+
 The available package outputs are `default`, `stable`, and `beta`. When adding one directly to `environment.systemPackages`, also add the same package to `services.udev.packages`.
 
 ## Overlay
