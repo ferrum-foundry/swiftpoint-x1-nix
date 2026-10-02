@@ -30,6 +30,13 @@ let
 
   packageIsPresent = option: package: builtins.elem (toString package) (map toString option);
 
+  policyPackage = packages.stable.override { supportsUpdatePolicy = true; };
+  manifestPolicyPackage = packages.stable.override {
+    release = (import ../packages/releases/3.1.3.1.nix) // {
+      features.disableUpdatesPolicy = true;
+    };
+  };
+
   overriddenStable = packages.stable.overrideAttrs (old: {
     postFixup = (old.postFixup or "") + ''
       # Ensure this test uses a distinct overridden derivation.
@@ -102,6 +109,34 @@ in
 
     touch "$out"
   '';
+
+  wrapper-update-policy =
+    assert !packages.stable.supportsUpdatePolicy;
+    assert !packages.beta.supportsUpdatePolicy;
+    assert policyPackage.supportsUpdatePolicy;
+    assert manifestPolicyPackage.supportsUpdatePolicy;
+    pkgs.runCommand "swiftpoint-wrapper-update-policy-tests" { } ''
+      export XDG_CONFIG_HOME="$TMPDIR/config"
+      settings_dir="$XDG_CONFIG_HOME/Swiftpoint X1 Control Panel"
+      settings_file="$settings_dir/settings.ini"
+
+      ${policyPackage.configureUserSettings}
+      test ! -e "$XDG_CONFIG_HOME"
+
+      mkdir -p "$settings_dir"
+      printf '[General]\nAutoUpdate=true\nReleaseChannel=Beta\n' > "$settings_file"
+      cp "$settings_file" "$TMPDIR/original.ini"
+      ${policyPackage.configureUserSettings}
+      cmp "$settings_file" "$TMPDIR/original.ini"
+
+      wrapper=${policyPackage}/bin/swiftpoint-x1-control-panel
+      grep -F 'SWIFTPOINT_X1_DISABLE_UPDATES' "$wrapper"
+      if grep -F '${policyPackage.configureUserSettings}' "$wrapper"; then
+        echo 'Policy wrapper still invokes settings workaround' >&2
+        exit 1
+      fi
+      touch "$out"
+    '';
 
   wrapper-runtime-path = pkgs.runCommand "swiftpoint-wrapper-runtime-path-test" { } ''
     wrapper=${packages.stable}/bin/.swiftpoint-x1-control-panel-wrapped

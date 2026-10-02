@@ -89,3 +89,9 @@ When behavior or packaging decisions change:
 - keep installation instructions in `README.md` and maintainer procedures here or under `docs/development/`;
 - add new documentation pages to `docs/README.md`; and
 - check that code changes have not invalidated existing troubleshooting or platform guidance.
+
+## Upstream software-update policy capability
+
+Release manifests may set `features.disableUpdatesPolicy = true` only after that binary's support for `SWIFTPOINT_X1_DISABLE_UPDATES=1` has been verified. Omission means `false`, preserving historical package behaviour. The package exposes `supportsUpdatePolicy` as an override and passthru value. Current release manifests intentionally remain unchanged while awaiting a supporting release.
+
+Before enabling a release, confirm automatic update checks and update/channel controls are disabled, existing settings are unchanged, and firmware management still works. The `wrapper-update-policy` flake check covers the packaging branch using a capability override; it does not prove support in the proprietary binary.
