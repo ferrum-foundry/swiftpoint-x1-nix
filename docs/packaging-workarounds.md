@@ -14,4 +14,4 @@ Keeping the rule with its release preserves any future upstream changes to suppo
 
 ## Configure software updates and release channels
 
-The executable wrapper applies two settings before each launch. It disables an updater that cannot replace software in the immutable Nix store, and it matches the saved release channel to the package being launched. See [Per-user settings](per-user-settings.md) for the exact behavior.
+For older releases, the executable wrapper applies two settings before each launch. Releases explicitly marked as supporting upstream update policy instead receive `SWIFTPOINT_X1_DISABLE_UPDATES=1`, with no settings writes. It disables an updater that cannot replace software in the immutable Nix store, and it matches the saved release channel to the package being launched. See [Per-user settings](per-user-settings.md) for the exact behavior.

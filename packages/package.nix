@@ -26,12 +26,15 @@
   gnugrep,
   gnused,
   release,
+  supportsUpdatePolicy ? release.features.disableUpdatesPolicy or false,
 }:
 
 let
   releaseChannel = if release.channel == "beta" then "Beta" else "Stable";
   configureUserSettings = writeShellScript "swiftpoint-configure-user-settings" ''
     set -euo pipefail
+
+    ${lib.optionalString supportsUpdatePolicy "exit 0"}
 
     config_home="''${XDG_CONFIG_HOME:-$HOME/.config}"
     config_dir="$config_home/Swiftpoint X1 Control Panel"
@@ -159,10 +162,17 @@ stdenv.mkDerivation rec {
     autoPatchelfOptions+=(--libs "${qt6.qtwayland}/lib")
   '';
 
-  postFixup = ''
-    wrapProgram "$out/bin/swiftpoint-x1-control-panel" \
-      --run ${lib.escapeShellArg configureUserSettings}
-  '';
+  postFixup =
+    if supportsUpdatePolicy then
+      ''
+        wrapProgram "$out/bin/swiftpoint-x1-control-panel" \
+          --set SWIFTPOINT_X1_DISABLE_UPDATES 1
+      ''
+    else
+      ''
+        wrapProgram "$out/bin/swiftpoint-x1-control-panel" \
+          --run ${lib.escapeShellArg configureUserSettings}
+      '';
 
   qtWrapperArgs = [
     "--prefix LD_LIBRARY_PATH : ${builtins.placeholder "out"}/share/swiftpoint/lib"
@@ -170,7 +180,7 @@ stdenv.mkDerivation rec {
 
   passthru = {
     inherit (release) channel firmware;
-    inherit configureUserSettings;
+    inherit configureUserSettings supportsUpdatePolicy;
     swiftpointX1ControlPanel = true;
     updateScript = ../update.sh;
   };
