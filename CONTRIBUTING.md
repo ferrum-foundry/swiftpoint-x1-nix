@@ -92,9 +92,3 @@ When behavior or packaging decisions change:
 `update.sh` reads only the official public and beta JSON feeds. `update-prior.sh VERSION` is deliberately separate because historical archive discovery still requires scraping the KB page. Neither script records firmware metadata.
 
 Offline updater integration checks run through `nix flake check`, or directly with `bash tests/update-feeds.sh` and `bash tests/update-prior.sh` when their shell dependencies are available. Fixtures exercise feed and historical discovery failure handling.
-
-## Upstream software-update policy capability
-
-Release manifests may set `features.disableUpdatesPolicy = true` only after that binary's support for `SWIFTPOINT_X1_DISABLE_UPDATES=1` has been verified. Omission means `false`, preserving historical package behaviour. The package exposes `supportsUpdatePolicy` as an override and passthru value. Current release manifests intentionally remain unchanged while awaiting a supporting release.
-
-Before enabling a release, confirm automatic update checks and update/channel controls are disabled, existing settings are unchanged, and firmware management still works. The `wrapper-update-policy` flake check covers the packaging branch using a capability override; it does not prove support in the proprietary binary.
