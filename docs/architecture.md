@@ -4,7 +4,7 @@
 
 `packages/package.nix` describes how one Swiftpoint release becomes a Nix derivation. Its `stdenv.mkDerivation` call patches and installs the upstream archive, adds the desktop entry and release-specific udev rules, and wraps the executable.
 
-That file deliberately does not decide which version is current. It receives a `release` value containing the version, channel, archive URL, hash, and known firmware versions.
+That file deliberately does not decide which version is current. It receives a `release` value containing the version, channel, archive URL, and hash.
 
 `packages/default.nix` handles release selection instead. It:
 
@@ -29,22 +29,16 @@ Each `packages/releases/VERSION.nix` file is immutable metadata for one upstream
     url = "...";
     hash = "sha256-...";
   };
-  firmware = {
-    z3 = 99;
-    receiver = 99;
-  };
 }
 ```
 
 The upstream archive remains the source of the executable, bundled libraries, profiles, translations, firmware images, and udev rules. These large binary artifacts are not vendored into this repository.
 
-Firmware metadata is recorded for review and compatibility context; it does not control firmware flashing.
-
 ## Updating is explicit
 
 A new upstream release does not automatically change a checked-out or locked flake. Running `./update.sh` discovers the currently advertised stable and beta versions, adds missing manifests, and updates both channel pointers. Users then receive those changes only after updating their flake input and rebuilding.
 
-The updater intentionally handles both channels in one normal invocation. The `--add VERSION` form exists only to preserve a listed historical release without moving either current pointer. See `CONTRIBUTING.md` for the maintainer workflow.
+The updater intentionally handles both channels in one normal invocation. Historical discovery is kept in `update-prior.sh VERSION` because it depends on scraping the upstream KB page; it preserves the release without moving either current pointer. See `CONTRIBUTING.md` for the maintainer workflow.
 
 ## Why udev rules remain release-specific
 

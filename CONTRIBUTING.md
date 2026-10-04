@@ -12,15 +12,15 @@ Run the updater from the repository root:
 ./update.sh
 ```
 
-One invocation discovers both current upstream channels, adds any missing release manifests, and advances the stable and beta pointers independently. Existing historical manifests remain available as versioned flake outputs.
+One invocation discovers both current upstream channels from Swiftpoint's official Linux JSON feeds, adds any missing release manifests, and advances the stable and beta pointers independently. Existing historical manifests remain available as versioned flake outputs.
 
 To add a release listed on the upstream page without changing either current pointer:
 
 ```sh
-./update.sh --add VERSION
+./update-prior.sh VERSION
 ```
 
-Review all generated metadata, including firmware versions, before committing. Then format and validate the flake:
+Review all generated metadata before committing. Then format and validate the flake:
 
 ```sh
 nix fmt .
@@ -31,10 +31,9 @@ nix build .#beta
 
 An update pull request should confirm that:
 
-- stable and beta versions match Swiftpoint's published release pages;
+- stable and beta versions and archive URLs match Swiftpoint's official JSON feeds;
 - archive URLs point to the intended platform and channel;
 - hashes were produced from those exact archives;
-- recorded mouse and receiver firmware versions match the release notes;
 - any archive-layout, bundled-library, plugin, or udev-rule changes were reviewed; and
 - both current packages build successfully.
 
@@ -89,3 +88,13 @@ When behavior or packaging decisions change:
 - keep installation instructions in `README.md` and maintainer procedures here or under `docs/development/`;
 - add new documentation pages to `docs/README.md`; and
 - check that code changes have not invalidated existing troubleshooting or platform guidance.
+
+`update.sh` reads only the official public and beta JSON feeds. `update-prior.sh VERSION` is deliberately separate because historical archive discovery still requires scraping the KB page. Neither script records firmware metadata.
+
+Offline updater integration checks run through `nix flake check`, or directly with `bash tests/update-feeds.sh` and `bash tests/update-prior.sh` when their shell dependencies are available. Fixtures exercise feed and historical discovery failure handling.
+
+## Upstream software-update policy capability
+
+Release manifests may set `features.disableUpdatesPolicy = true` only after that binary's support for `SWIFTPOINT_X1_DISABLE_UPDATES=1` has been verified. Omission means `false`, preserving historical package behaviour. The package exposes `supportsUpdatePolicy` as an override and passthru value. Current release manifests intentionally remain unchanged while awaiting a supporting release.
+
+Before enabling a release, confirm automatic update checks and update/channel controls are disabled, existing settings are unchanged, and firmware management still works. The `wrapper-update-policy` flake check covers the packaging branch using a capability override; it does not prove support in the proprietary binary.

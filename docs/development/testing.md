@@ -60,7 +60,7 @@ This check only verifies that the current Linux package overlay is harmless on D
 
 ## Release-updater validation
 
-The updater accesses Swiftpoint's live support page and is intentionally not part of pure flake checks. Test it explicitly when changing its parser:
+The current-release updater accesses Swiftpoint's live JSON feeds. Test it explicitly when changing its parser:
 
 ```console
 ./update.sh
@@ -68,6 +68,8 @@ git diff -- packages/default.nix packages/releases
 ```
 
 When upstream has not changed, the updater should report the current stable and beta versions without changing those files. When it has changed, review the generated metadata and build both packages before accepting the update.
+
+Historical archive discovery uses the KB page through `./update-prior.sh VERSION` and has a separate offline fixture check.
 
 ## GitHub Actions validation
 

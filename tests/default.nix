@@ -62,6 +62,39 @@ let
   };
 in
 {
+  updater-feeds =
+    pkgs.runCommand "swiftpoint-updater-feed-tests"
+      {
+        nativeBuildInputs = [
+          pkgs.bash
+          pkgs.jq
+          pkgs.coreutils
+          pkgs.diffutils
+          pkgs.gnugrep
+          pkgs.gnused
+        ];
+      }
+      ''
+        bash ${../.}/tests/update-feeds.sh
+        touch "$out"
+      '';
+
+  updater-prior =
+    pkgs.runCommand "swiftpoint-updater-prior-tests"
+      {
+        nativeBuildInputs = [
+          pkgs.bash
+          pkgs.jq
+          pkgs.coreutils
+          pkgs.diffutils
+          pkgs.gnugrep
+        ];
+      }
+      ''
+        bash ${../.}/tests/update-prior.sh
+        touch "$out"
+      '';
+
   package-stable = packages.stable;
   package-beta = packages.beta;
 
