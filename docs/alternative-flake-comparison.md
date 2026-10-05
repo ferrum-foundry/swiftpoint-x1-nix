@@ -4,7 +4,7 @@ This flake and [Blu3SoulsIT/NiX1-Control-Panel](https://github.com/Blu3SoulsIT/N
 
 | Area | This flake | NiX1-Control-Panel |
 | --- | --- | --- |
-| Releases | Stable, beta and versioned outputs backed by release manifests | One hard-coded beta release |
+| Releases | Current stable and beta outputs plus channel-qualified retained releases through the overlay | One hard-coded beta release |
 | Updates | Updater plus a daily/manual pull-request workflow | Manual source edits |
 | Integration | Packages, overlay and NixOS module | Package flake |
 | Stable/beta safety | Module selects one channel and detects conflicting installations | Not modelled |

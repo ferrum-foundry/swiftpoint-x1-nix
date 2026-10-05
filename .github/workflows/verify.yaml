@@ -1,0 +1,38 @@
+name: Verify
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: verify-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  flake:
+    name: Check flake
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+
+      - name: Install Nix
+        uses: cachix/install-nix-action@v31
+        with:
+          github_access_token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Check Nix formatting
+        run: git ls-files -z '*.nix' | xargs -0 nix fmt -- --check
+
+      - name: Check flake
+        run: nix flake check --print-build-logs
+
+      - name: Check for generated changes
+        run: git diff --exit-code

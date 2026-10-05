@@ -70,24 +70,25 @@ add_release() {
 	local version="$1"
 	local channel="$2"
 	local url="$3"
-	local manifest prefetch_result hash temporary_manifest
+	local channel_dir manifest prefetch_result hash temporary_manifest
 
-	manifest="$releases_dir/$version.nix"
+	channel_dir="$releases_dir/$channel"
+	manifest="$channel_dir/$version.nix"
 	if [[ -e "$manifest" ]]; then
 		echo "Release manifest already exists: $manifest"
 		return
 	fi
 
+	mkdir -p "$channel_dir"
 	echo "Fetching Swiftpoint X1 Control Panel $version" >&2
 	prefetch_result="$(nix store prefetch-file --json --name "swiftpoint-x1-control-panel-$version.tar.xz" "$url")"
 	hash="$(jq -er .hash <<<"$prefetch_result")"
-	temporary_manifest="$(mktemp "$releases_dir/.swiftpoint-release.XXXXXX")"
+	temporary_manifest="$(mktemp "$channel_dir/.swiftpoint-release.XXXXXX")"
 	trap 'rm -f "$temporary_manifest"' RETURN
 
 	cat >"$temporary_manifest" <<EOF
 {
   version = "$version";
-  channel = "$channel";
 
   source = {
     url = "$url";

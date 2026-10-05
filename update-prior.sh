@@ -11,7 +11,7 @@ usage() {
 	cat <<'EOF'
 Usage: update-prior.sh VERSION
 
-Add a historical release listed on Swiftpoint's support page without changing
+Add a prior stable release listed on Swiftpoint's support page without changing
 the current stable or beta pointer.
 EOF
 }
@@ -31,7 +31,8 @@ if [[ ! "$version" =~ ^[0-9]+(\.[0-9]+){3}$ ]]; then
 	exit 1
 fi
 
-manifest="$releases_dir/$version.nix"
+channel_dir="$releases_dir/stable"
+manifest="$channel_dir/$version.nix"
 if [[ -e "$manifest" ]]; then
 	echo "Release manifest already exists: $manifest"
 	exit 0
@@ -48,13 +49,13 @@ fi
 echo "Fetching Swiftpoint X1 Control Panel $version" >&2
 prefetch_result="$(nix store prefetch-file --json --name "swiftpoint-x1-control-panel-$version.tar.xz" "$url")"
 hash="$(jq -er .hash <<<"$prefetch_result")"
-temporary_manifest="$(mktemp "$releases_dir/.swiftpoint-release.XXXXXX")"
+mkdir -p "$channel_dir"
+temporary_manifest="$(mktemp "$channel_dir/.swiftpoint-release.XXXXXX")"
 trap 'rm -f "$temporary_manifest"' EXIT
 
 cat >"$temporary_manifest" <<EOF
 {
   version = "$version";
-  channel = "historical";
 
   source = {
     url = "$url";
@@ -66,4 +67,4 @@ EOF
 mv "$temporary_manifest" "$manifest"
 trap - EXIT
 nixfmt "$manifest"
-echo "Added Swiftpoint X1 Control Panel $version without changing a pointer"
+echo "Added stable Swiftpoint X1 Control Panel $version without changing a pointer"

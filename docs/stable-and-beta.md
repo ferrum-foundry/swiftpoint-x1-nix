@@ -14,7 +14,7 @@ Use the NixOS module's single channel option:
 programs.swiftpoint-x1-control-panel.channel = "stable";
 ```
 
-Package derivations carry a family marker and release-channel value. The module uses those values to reject a configuration containing different Swiftpoint releases in `environment.systemPackages` or `services.udev.packages`. This also works for normal package overrides rather than relying on exact store-path identity. Nix itself still permits both derivations to exist in the Nix store, as it does for different versions of any package.
+Package derivations carry a family marker and release-channel value. The module uses those values to reject a configuration containing both Swiftpoint channels in `environment.systemPackages` or `services.udev.packages`. This also works for normal package overrides rather than relying on exact store-path identity. Nix itself still permits both derivations to exist in the Nix store, as it does for different versions of any package.
 
 ## Why the packages or overlay cannot enforce this alone
 
