@@ -35,17 +35,25 @@ run_update() {
 }
 
 run_update 2.0.0.1
-manifest="$test_root/packages/releases/2.0.0.1.nix"
-grep -qF 'channel = "historical";' "$manifest"
-grep -qF "$historical_url" "$manifest"
-if grep -q firmware "$manifest"; then
+stable_manifest="$test_root/packages/releases/stable/2.0.0.1.nix"
+grep -qF "$historical_url" "$stable_manifest"
+if grep -q channel "$stable_manifest"; then
+	echo "Historical manifest unexpectedly contains channel metadata" >&2
+	exit 1
+fi
+if grep -q firmware "$stable_manifest"; then
 	echo "Historical manifest unexpectedly contains firmware metadata" >&2
 	exit 1
 fi
 
-cp "$manifest" "$test_root/manifest.before"
+cp "$stable_manifest" "$test_root/manifest.before"
 run_update 2.0.0.1
-cmp "$test_root/manifest.before" "$manifest"
+cmp "$test_root/manifest.before" "$stable_manifest"
+
+if [[ -e "$test_root/packages/releases/beta" ]]; then
+	echo "Prior stable updater unexpectedly created beta metadata" >&2
+	exit 1
+fi
 
 if run_update 1.0.0.0; then
 	echo "Historical updater unexpectedly accepted a missing version" >&2
@@ -55,5 +63,4 @@ if run_update invalid; then
 	echo "Historical updater unexpectedly accepted an invalid version" >&2
 	exit 1
 fi
-
-echo "Passed: historical discovery, immutable manifests, missing versions, and invalid versions"
+echo "Passed: prior stable discovery, channel placement, immutable manifests, and invalid inputs"

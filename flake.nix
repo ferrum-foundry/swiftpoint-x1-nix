@@ -25,7 +25,6 @@
           inherit (swiftpointPackages) stable beta;
           default = swiftpointPackages.stable;
         }
-        // swiftpointPackages.versions
       );
 
       overlays.default =
@@ -37,7 +36,7 @@
           {
             swiftpoint-x1-control-panel = swiftpointPackages.stable;
             swiftpoint-x1-control-panel-beta = swiftpointPackages.beta;
-            swiftpoint-x1-control-panel-versions = swiftpointPackages.versions;
+            swiftpoint-x1-control-panel-releases = swiftpointPackages.releases;
           }
         );
 

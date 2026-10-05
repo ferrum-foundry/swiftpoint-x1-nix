@@ -69,7 +69,7 @@ git diff -- packages/default.nix packages/releases
 
 When upstream has not changed, the updater should report the current stable and beta versions without changing those files. When it has changed, review the generated metadata and build both packages before accepting the update.
 
-Historical archive discovery uses the KB page through `./update-prior.sh VERSION` and has a separate offline fixture check.
+Prior stable archive discovery uses the KB page through `./update-prior.sh VERSION` and has a separate offline fixture check that verifies it writes only to the stable channel. The feed fixture deliberately gives stable and beta the same version and content hash to verify that channel-qualified manifests do not collide.
 
 ## GitHub Actions validation
 

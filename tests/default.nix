@@ -8,6 +8,9 @@
 let
   lib = nixpkgs.lib;
   packages = self.packages.${system};
+  collisionPackages = pkgs.callPackage ../packages {
+    releasesDirectory = ./fixtures/releases;
+  };
 
   mkConfiguration =
     channel:
@@ -17,6 +20,7 @@ let
         self.nixosModules.default
         {
           system.stateVersion = "26.05";
+          nixpkgs.config.allowUnfree = true;
           programs.swiftpoint-x1-control-panel = {
             enable = true;
             inherit channel;
@@ -101,7 +105,25 @@ in
   module =
     assert builtins.hasAttr "swiftpoint-x1-control-panel" stableConfiguration.pkgs;
     assert builtins.hasAttr "swiftpoint-x1-control-panel-beta" stableConfiguration.pkgs;
-    assert builtins.hasAttr "swiftpoint-x1-control-panel-versions" stableConfiguration.pkgs;
+    assert builtins.hasAttr "swiftpoint-x1-control-panel-releases" stableConfiguration.pkgs;
+    assert !(builtins.hasAttr "swiftpoint-x1-control-panel-versions" stableConfiguration.pkgs);
+    assert
+      builtins.attrNames packages == [
+        "beta"
+        "default"
+        "stable"
+      ];
+    assert
+      toString stableConfiguration.pkgs.swiftpoint-x1-control-panel-releases.stable."3.1.3.1"
+      == toString packages.stable;
+    assert
+      toString stableConfiguration.pkgs.swiftpoint-x1-control-panel-releases.beta."3.1.3.39"
+      == toString packages.beta;
+    assert collisionPackages.releases.stable."3.1.4.0".channel == "stable";
+    assert collisionPackages.releases.beta."3.1.4.0".channel == "beta";
+    assert
+      toString collisionPackages.releases.stable."3.1.4.0"
+      != toString collisionPackages.releases.beta."3.1.4.0";
     assert packageIsPresent stableConfiguration.config.environment.systemPackages packages.stable;
     assert packageIsPresent stableConfiguration.config.services.udev.packages packages.stable;
     assert packageIsPresent betaConfiguration.config.environment.systemPackages packages.beta;

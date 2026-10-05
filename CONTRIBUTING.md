@@ -12,13 +12,15 @@ Run the updater from the repository root:
 ./update.sh
 ```
 
-One invocation discovers both current upstream channels from Swiftpoint's official Linux JSON feeds, adds any missing release manifests, and advances the stable and beta pointers independently. Existing historical manifests remain available as versioned flake outputs.
+One invocation discovers both current upstream channels from Swiftpoint's official Linux JSON feeds, adds any missing release manifests, and advances the stable and beta pointers independently. Existing manifests remain available through the overlay's channel-qualified release set.
 
 To add a release listed on the upstream page without changing either current pointer:
 
 ```sh
 ./update-prior.sh VERSION
 ```
+
+The upstream support page catalogues stable releases, so this script always writes under `packages/releases/stable/`. Prior beta releases are retained only when they have been observed through the beta JSON feed by the normal updater.
 
 Review all generated metadata before committing. Then format and validate the flake:
 
@@ -43,7 +45,7 @@ Running the updater against an unchanged upstream state should not change `packa
 
 - `packages/package.nix` contains the shared derivation.
 - `packages/default.nix` discovers manifests and selects current channels.
-- `packages/releases/` contains immutable release metadata.
+- `packages/releases/stable/` and `packages/releases/beta/` contain immutable release metadata. Channel and version together identify a release.
 - `modules/default.nix` provides the NixOS integration.
 
 Each application archive retains its own upstream udev rules. This allows a future release to change device support without requiring a separate packaging update for shared rules.
@@ -89,6 +91,6 @@ When behavior or packaging decisions change:
 - add new documentation pages to `docs/README.md`; and
 - check that code changes have not invalidated existing troubleshooting or platform guidance.
 
-`update.sh` reads only the official public and beta JSON feeds. `update-prior.sh VERSION` is deliberately separate because historical archive discovery still requires scraping the KB page. Neither script records firmware metadata.
+`update.sh` reads only the official public and beta JSON feeds. The stable-only `update-prior.sh VERSION` is deliberately separate because prior archive discovery still requires scraping the KB page. Neither script records firmware metadata.
 
 Offline updater integration checks run through `nix flake check`, or directly with `bash tests/update-feeds.sh` and `bash tests/update-prior.sh` when their shell dependencies are available. Fixtures exercise feed and historical discovery failure handling.

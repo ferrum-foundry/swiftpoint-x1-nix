@@ -32,7 +32,6 @@ The public package outputs are:
 
 - `packages.x86_64-linux.default`, which follows stable;
 - `packages.x86_64-linux.stable`;
-- `packages.x86_64-linux.beta`; and
-- version-number outputs for retained manifests.
+- `packages.x86_64-linux.beta`.
 
-The overlay exposes stable, beta, and the version set to an existing Nixpkgs package set. The NixOS module uses the flake package outputs directly and adds the selected derivation to both `environment.systemPackages` and `services.udev.packages`.
+The overlay exposes the current stable and beta packages plus `swiftpoint-x1-control-panel-releases.CHANNEL.VERSION` for selecting a specific retained release. The NixOS module uses the current flake package outputs directly and adds the selected derivation to both `environment.systemPackages` and `services.udev.packages`.
