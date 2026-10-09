@@ -114,10 +114,10 @@ in
         "stable"
       ];
     assert
-      toString stableConfiguration.pkgs.swiftpoint-x1-control-panel-releases.stable."3.1.3.1"
+      toString stableConfiguration.pkgs.swiftpoint-x1-control-panel-releases.stable.${packages.stable.version}
       == toString packages.stable;
     assert
-      toString stableConfiguration.pkgs.swiftpoint-x1-control-panel-releases.beta."3.1.3.39"
+      toString stableConfiguration.pkgs.swiftpoint-x1-control-panel-releases.beta.${packages.beta.version}
       == toString packages.beta;
     assert collisionPackages.releases.stable."3.1.4.0".channel == "stable";
     assert collisionPackages.releases.beta."3.1.4.0".channel == "beta";
