@@ -114,7 +114,8 @@ in
         "stable"
       ];
     assert
-      toString stableConfiguration.pkgs.swiftpoint-x1-control-panel-releases.stable.${packages.stable.version}
+      toString
+        stableConfiguration.pkgs.swiftpoint-x1-control-panel-releases.stable.${packages.stable.version}
       == toString packages.stable;
     assert
       toString stableConfiguration.pkgs.swiftpoint-x1-control-panel-releases.beta.${packages.beta.version}
