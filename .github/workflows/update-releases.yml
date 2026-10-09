@@ -33,6 +33,9 @@ jobs:
       - name: Update release metadata
         run: ./update.sh
 
+      - name: Format release metadata
+        run: nix fmt packages/default.nix packages/releases/stable/*.nix packages/releases/beta/*.nix
+
       - name: Stage release metadata
         run: git add -- packages/default.nix packages/releases
 
