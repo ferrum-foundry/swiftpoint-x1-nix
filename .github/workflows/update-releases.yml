@@ -33,11 +33,14 @@ jobs:
       - name: Update release metadata
         run: ./update.sh
 
+      - name: Stage release metadata
+        run: git add -- packages/default.nix packages/releases
+
       - name: Check for changes
         id: changes
         shell: bash
         run: |
-          if git diff --quiet -- packages/default.nix packages/releases; then
+          if git diff --staged --quiet -- packages/default.nix packages/releases; then
             echo "changed=false" >> "$GITHUB_OUTPUT"
           else
             echo "changed=true" >> "$GITHUB_OUTPUT"
