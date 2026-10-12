@@ -5,7 +5,7 @@
 }:
 
 let
-  currentStableVersion = "3.1.3.1";
+  currentStableVersion = "3.1.4.0";
   currentBetaVersion = "3.1.3.74";
   channels = [
     "stable"
