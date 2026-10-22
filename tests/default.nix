@@ -160,13 +160,18 @@ in
   '';
 
   wrapper-runtime-path = pkgs.runCommand "swiftpoint-wrapper-runtime-path-test" { } ''
-    wrapper=${packages.stable}/bin/.swiftpoint-x1-control-panel-wrapped
+    for wrapper in \
+      ${packages.stable}/bin/.swiftpoint-x1-control-panel-wrapped \
+      ${packages.beta}/bin/.swiftpoint-x1-control-panel-wrapped
+    do
+      grep -F '/share/swiftpoint/lib' "$wrapper"
+      grep -F '${pkgs.xkeyboard_config}/share/X11/xkb' "$wrapper"
 
-    grep -F '${packages.stable}/share/swiftpoint/lib' "$wrapper"
-    if grep -F '$out/share/swiftpoint/lib' "$wrapper"; then
-      echo 'Qt wrapper contains an unresolved $out reference' >&2
-      exit 1
-    fi
+      if grep -E '\$(out|\{[^}]+\})' "$wrapper"; then
+        echo 'Qt wrapper contains an unresolved Nix variable' >&2
+        exit 1
+      fi
+    done
 
     touch "$out"
   '';
