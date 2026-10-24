@@ -20,6 +20,7 @@
   libXi,
   libXrender,
   libxcb,
+  xkeyboard_config,
   makeDesktopItem,
   writeShellScript,
   coreutils,
@@ -166,6 +167,7 @@ stdenv.mkDerivation rec {
 
   qtWrapperArgs = [
     "--prefix LD_LIBRARY_PATH : ${builtins.placeholder "out"}/share/swiftpoint/lib"
+    "--set XKB_CONFIG_ROOT ${xkeyboard_config}/share/X11/xkb"
   ];
 
   passthru = {
